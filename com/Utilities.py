@@ -7,12 +7,23 @@ class Utilities(object):
 
     @staticmethod
     def sanitize_url(url_string):
-        index = url_string.index("?")  # Find video id
-        aux_url_string = url_string[index + 3:]  # Get rid of "?v="
-        index = aux_url_string.find("?")  # Look for other arguments
+        index = url_string.find("youtu.be")
+
         if index != -1:
-            aux_url_string = aux_url_string[:index]  # Get rid of them if necessary
-        return aux_url_string
+            url_string = url_string[index + 9:]  # Get all after "youtu.be/" (9 characters)
+        else:
+            index = url_string.index("?")  # Find video id
+            url_string = url_string[index + 3:]  # Get rid of "?v="
+
+        index = url_string.find("?")  # Look for other arguments
+        if index != -1:
+            url_string = url_string[:index]  # Get rid of them if necessary
+
+        index = url_string.find("&")  # The same as for "?"
+        if index != -1:
+            url_string = url_string[:index]
+
+        return url_string
 
     @staticmethod
     def get_playlist_string_from_videos(videos_list):
