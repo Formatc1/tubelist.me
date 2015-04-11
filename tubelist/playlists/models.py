@@ -3,7 +3,7 @@ from django.db import models
 
 class Playlist(models.Model):
     """Class for playlists"""
-    url = models.CharField(max_length=20, unique=True)
+    url = models.CharField(max_length=32, unique=True)
     name = models.CharField(max_length=100)
     author = models.EmailField()
 
