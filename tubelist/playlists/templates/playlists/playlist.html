@@ -1,0 +1,17 @@
+<h3>{{ playlist.name }}</h3>
+
+<ul>
+    {% for video in playlist.sorted_video_set.all %}
+    <li>{{ video.name }}</li>
+    {% endfor %}
+</ul>
+
+<form action="{% url 'playlists:search' playlist_id %}" method="get">
+    <input type="text" name="q" value="" />
+<input type="submit" value="Szukaj" />
+</form>
+
+{% if playlist.sorted_video_set.all|length > 0 %}
+<iframe id="ytplayer" type="text/html" width="640" height="390"
+  src="http://www.youtube.com/embed/{{ playlist.sorted_video_set.all.0.identifier }}?autoplay=1&playlist={{ playlist.sorted_video_id_set|join:"," }}"frameborder="0"/>
+{% endif %}
