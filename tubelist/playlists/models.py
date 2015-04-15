@@ -5,10 +5,18 @@ class Playlist(models.Model):
     """Class for playlists"""
     url = models.CharField(max_length=32, unique=True)
     name = models.CharField(max_length=100)
-    author = models.EmailField()
+    author = models.EmailField(blank=True)
 
     def __unicode__(self):
         return self.name
+
+    @property
+    def sorted_video_set(self):
+        return self.video_set.order_by('order')
+
+    @property
+    def sorted_video_id_set(self):
+        return [x.identifier for x in self.video_set.order_by('order')[1:]]
 
 
 class Video(models.Model):
