@@ -4,3 +4,7 @@
     <input type="e-mail" name="author" value="" />
 <input type="submit" value="Create Playlist" />
 </form>
+
+{% for playlist in playlists %}
+    <a href="{% url 'playlists:playlist' playlist.url %}">{{ playlist.name }}</a>
+{% endfor %}

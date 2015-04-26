@@ -1,0 +1,5 @@
+<form action="{% url 'playlists:recover' %}" method="post">
+{% csrf_token %}
+    <input type="e-mail" name="author" value="" />
+<input type="submit" value="Wyślij" />
+</form>
