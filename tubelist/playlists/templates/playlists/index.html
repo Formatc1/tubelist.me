@@ -1,10 +1,18 @@
-<form action="{% url 'playlists:new' %}" method="post">
-{% csrf_token %}
-    <input type="text" name="name" value="New Playlist" />
-    <input type="e-mail" name="author" value="" />
-<input type="submit" value="Create Playlist" />
-</form>
+{% extends "playlists/base.html" %}
 
-{% for playlist in playlists %}
-    <a href="{% url 'playlists:playlist' playlist.url %}">{{ playlist.name }}</a>
-{% endfor %}
+{% block content %}
+<div class="form center">
+    <form class="new" action="{% url 'playlists:new' %}" method="post">
+        <div class="inputs">
+            {% csrf_token %}
+            <input class="name" type="text" name="name" value="New Playlist" />
+            <input class="e-mail" type="e-mail" name="author" value="E-mail" />
+        </div>
+        <input class="submit" type="submit" value="Create Playlist" />
+    </form>
+</div>
+<br class="clear">
+{% if error %}
+    <div class="error">{{ error }}</div>
+{% endif %}
+{% endblock %}

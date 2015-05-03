@@ -1,0 +1,47 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>TubeList</title>
+    <link rel="stylesheet" href="{% static "playlists/css/style.css" %}">
+    <link rel="stylesheet" href="{% static "playlists/css/normalize.css" %}">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'playlists:index' %}">HOME</a></li>
+            <li><a href="#">HOW TO</a></li>
+            <li><a href="{% url 'playlists:recover' %}">RECOVER</a></li>
+            <li>&nbsp;</li>
+            {% block user_playlists %}
+                {% if playlists %}
+                    <li>MY PLAYLISTS:
+                        <ul>
+                            {% for playlist in playlists %}
+                                <li><a href="{% url 'playlists:playlist' playlist.url %}">{{ playlist.name }}</a></li>
+                            {% endfor %}
+
+                        </ul>
+                    </li> 
+                {% endif %}
+            {% endblock %}
+        </ul>
+    </nav>
+    {% block logo %}
+        <div id="logo"><img src="{% static "playlists/img/logo.png" %}" alt=""></div>
+    {% endblock %}
+    <div class="content">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+    <footer>
+        <div class="wrapper">
+            <div>Authors:</div>
+            <div class="separator">Adam Gołąb</div>
+            <div class="separator">Maciej Szymczak</div>
+        </div>
+    </footer>
+</body>
+</html>

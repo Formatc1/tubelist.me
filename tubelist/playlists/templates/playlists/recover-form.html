@@ -1,5 +1,11 @@
-<form action="{% url 'playlists:recover' %}" method="post">
-{% csrf_token %}
-    <input type="e-mail" name="author" value="" />
-<input type="submit" value="Wyślij" />
-</form>
+{% extends "playlists/base.html" %}
+
+{% block content %}
+<div class="form">
+    <form action="{% url 'playlists:recover' %}" method="post">
+        {% csrf_token %}
+        <input class="e-mail" type="e-mail" name="author" value="E-mail" />
+        <input class="submit" type="submit" value="Wyślij" />
+    </form>
+</div>
+{% endblock %}

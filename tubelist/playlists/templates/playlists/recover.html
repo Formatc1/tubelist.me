@@ -1,5 +1,9 @@
+{% extends "playlists/base.html" %}
+
+{% block content %}
 {% if message %}
 <p>Wiadomość została wysłana na adres e-mail: {{ message }}.</p>
 {% else %}
 <p>Nie znaleziono Twoich playlist.</p>
 {% endif %}
+{% endblock %}
