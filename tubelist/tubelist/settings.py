@@ -80,4 +80,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "../static"),
+)
+
 STATIC_URL = '/static/'
+
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_HOST_USER = 'postmaster@sandboxc47aca8c7928420da0b941589ff27ce0.mailgun.org'
+EMAIL_HOST_PASSWORD = '0988173537bf72a75e8c80ff96599c90'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
