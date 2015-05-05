@@ -1,0 +1,17 @@
+{% extends "playlists/base.html" %}
+{% load staticfiles %}
+
+{% block logo %}
+    <div class="logo-small">
+        <img src="{% static "playlists/img/logo-small.png" %}" alt="">
+        <h3> : Search results for: {{ query }}</h3>
+    </div>
+{% endblock %}
+
+{% block content %}
+<ul class="videos">
+    {% for video in videos %}
+    <li>{{ video.name }} - <a href="{% url 'playlists:add' playlist_id video.id video.name %}">Add</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}
