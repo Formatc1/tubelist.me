@@ -17,10 +17,10 @@
             <li><a href="{% url 'playlists:recover' %}">RECOVER</a></li>
             <li>&nbsp;</li>
             {% block user_playlists %}
-                {% if playlists %}
+                {% if user_playlists %}
                     <li>MY PLAYLISTS:
                         <ul>
-                            {% for playlist in playlists %}
+                            {% for playlist in user_playlists %}
                                 <li><a href="{% url 'playlists:playlist' playlist.url %}">{{ playlist.name }}</a></li>
                             {% endfor %}
 

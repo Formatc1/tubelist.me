@@ -22,7 +22,7 @@ def user_playlists(request):
 
 def index(request, error=None):
     user_playlists_list = user_playlists(request)
-    return render(request, 'playlists/index.html', {'playlists': user_playlists_list, 'error': error})
+    return render(request, 'playlists/index.html', {'user_playlists': user_playlists_list, 'error': error})
 
 
 def new(request):
@@ -52,7 +52,11 @@ def playlist(request, playlist_id):
         user_playlists_list = p
         playlists = playlist_id
     playlists = ':'.join(playlists)
+<<<<<<< HEAD
     response = render(request, 'playlists/playlist.html', {'playlist': p})
+=======
+    response = render(request, 'playlists/playlist.html', {'playlist': p, 'user_playlists': user_playlists_list})
+>>>>>>> origin/master
     response.set_cookie(key='playlists', value=playlists, max_age=31536000)
     return response
 
@@ -74,8 +78,9 @@ def search(request, playlist_id):
             video["id"] = search_result["id"]["videoId"]
             video["name"] = search_result["snippet"]["title"]
             videos.append(video)
+    user_playlists_list = user_playlists(request)
     return render(request, 'playlists/search.html', {'query': query,
-        'videos': videos, 'playlist_id': playlist_id})
+        'videos': videos, 'playlist_id': playlist_id, 'user_playlists': user_playlists_list})
 
 
 def add(request, playlist_id, video_id, video_name):
@@ -106,10 +111,10 @@ def recover(request):
     if 'author' in request.POST.keys():
         playlists = Playlist.objects.filter(author=request.POST['author'])
         if not playlists:
-            return render(request, 'playlists/recover.html', {'playlists': user_playlists_list})
+            return render(request, 'playlists/recover.html', {'user_playlists': user_playlists_list})
         else:
             result = '\r\n'.join(['%s - %s' % (x.name, x.url) for x in playlists])
             send_mail('Playlisty', result, 'playlisty@tubelist.me', [request.POST['author']])
-            return render(request, 'playlists/recover.html', {'message': request.POST['author'], 'playlists': user_playlists_list})
+            return render(request, 'playlists/recover.html', {'message': request.POST['author'], 'user_playlists': user_playlists_list})
     else:
         return render(request, 'playlists/recover-form.html', {'playlists': user_playlists_list})
