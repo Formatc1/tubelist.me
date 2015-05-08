@@ -11,7 +11,9 @@
     <nav>
         <ul>
             <li><a href="{% url 'playlists:index' %}">HOME</a></li>
+            <li>|</li>
             <li><a href="#">HOW TO</a></li>
+            <li>|</li>
             <li><a href="{% url 'playlists:recover' %}">RECOVER</a></li>
             <li>&nbsp;</li>
             {% block user_playlists %}
@@ -29,7 +31,11 @@
         </ul>
     </nav>
     {% block logo %}
-        <div id="logo"><img src="{% static "playlists/img/logo.png" %}" alt=""></div>
+        <div id="logo">
+            <img src="{% static "playlists/img/logo.png" %}" alt="">
+            <h1>Create YouTube playlists with ease!</h1>
+
+        </div>
     {% endblock %}
     <div class="content">
         {% block content %}

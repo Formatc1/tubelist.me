@@ -7,8 +7,12 @@ class Playlist(models.Model):
     name = models.CharField(max_length=100)
     author = models.EmailField(blank=True)
 
+    list = [url, name, author]
+
     def __unicode__(self):
         return self.name
+
+
 
     @property
     def sorted_video_set(self):

@@ -52,7 +52,7 @@ def playlist(request, playlist_id):
         user_playlists_list = p
         playlists = playlist_id
     playlists = ':'.join(playlists)
-    response = render(request, 'playlists/playlist.html', {'playlist': p, 'playlists': user_playlists_list})
+    response = render(request, 'playlists/playlist.html', {'playlist': p})
     response.set_cookie(key='playlists', value=playlists, max_age=31536000)
     return response
 
