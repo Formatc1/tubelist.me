@@ -5,13 +5,13 @@ from playlists.models import Playlist, Video
 
 
 class VideosInLine(admin.TabularInline):
-    """Class for viewing videos inline"""
+    """Class for view"""
     model = Video
     extra = 1
 
 
 class PlaylistAdmin(admin.ModelAdmin):
-    """Class for displaying videos in Playlist admin panel"""
+    """Class for field set"""
     fieldset = [
         (None, {'fields': ['url', 'name', 'author']}),
     ]

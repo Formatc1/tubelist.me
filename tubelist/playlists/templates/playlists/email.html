@@ -1,6 +1,0 @@
-<h3>Your playlists:</h3>
-<ul>
-{% for playlist in user_playlists %}
-    <li><a href="{{ baseurl }}{% url 'playlists:playlist' playlist.url %}">{{ playlist.name }} - {{ playlist.url }}</a></li>
-{% endfor %}
-</ul>

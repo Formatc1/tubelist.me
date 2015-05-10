@@ -87,10 +87,7 @@ STATICFILES_DIRS = (
 STATIC_URL = '/static/'
 
 EMAIL_HOST = 'smtp.mailgun.org'
-EMAIL_HOST_USER = 'postmaster@sandboxc47aca8c7928420da0b941589ff27ce0\
-.mailgun.org'
+EMAIL_HOST_USER = 'postmaster@sandboxc47aca8c7928420da0b941589ff27ce0.mailgun.org'
 EMAIL_HOST_PASSWORD = '0988173537bf72a75e8c80ff96599c90'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-
-YT_DEVELOPER_KEY = 'AIzaSyBotPyfxhqOQqsmjLCW19UTKw6w2jIrQrI'

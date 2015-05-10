@@ -1,4 +1,0 @@
-Your playlists:\r\n
-{% for playlist in user_playlists %}
-    {{ playlist.name }} - {{ playlist.url }}\r\n
-{% endfor %}

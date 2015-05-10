@@ -14,12 +14,12 @@ class Playlist(models.Model):
 
     @property
     def sorted_video_set(self):
-        """Return videos sorted by order"""
+        """Return sorted videos"""
         return self.video_set.order_by('order')
 
     @property
     def sorted_video_id_set(self):
-        """Return identifiers sorted by order from second to last"""
+        """Return sorted identifiers"""
         return [x.identifier for x in self.video_set.order_by('order')[1:]]
 
 
