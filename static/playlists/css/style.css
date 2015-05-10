@@ -1,9 +1,14 @@
+@font-face {
+    font-family: LatoRegular;
+    src: url(../fonts/Lato-Regular.ttf);
+}
+
+
 body {
     background: url(../img/grey.png) repeat #f5f5f5;
 }
 
 a, a:visited, a:link {
-    color: #a1a1a1;
     text-decoration: none;
 }
 
@@ -17,12 +22,21 @@ br.clear {
 }
 
 nav {
+    font-family: LatoRegular;
     color: #a1a1a1;
     position: absolute;
     top: 0px;
     left: 0px;
-    padding: 25px;
-    line-height: 1.5em;
+    padding: 10px;
+}
+
+nav a{
+    color: #a1a1a1;
+}
+
+nav li{
+    float:left;
+    padding: 5px;
 }
 
 nav ul {
@@ -32,12 +46,34 @@ nav ul {
 }
 
 nav ul ul {
-    margin-left: 20px;
+    float:right;
 }
 
+nav ul ul li{
+    padding: 0;
+    padding-left: 10px;
+}
+
+nav ul ul a{
+    color: #8dc63f;
+}
+
+
 #logo {
+    background: url(../img/background1.jpg) no-repeat center center;
+    background-size: cover;
+    padding-top: 30px;
+    border: 1px solid #f5f5f5;
+    border-right: 0px;
+    border-left: 0px;
     text-align: center;
     margin: 50px 0 50px 0;
+}
+
+#logo h1{
+    font-family: LatoRegular;
+    font-size: 3em;
+    color: #fff;
 }
 
 .logo-small {
@@ -140,6 +176,7 @@ nav ul ul {
 }
 
 footer {
+    font-family: LatoRegular;
     font-size: 0.8em;
     position: absolute;
     bottom: 0;

@@ -1,3 +1,5 @@
+"""Models for playlists"""
+
 from django.db import models
 
 
@@ -12,10 +14,12 @@ class Playlist(models.Model):
 
     @property
     def sorted_video_set(self):
+        """Return sorted videos"""
         return self.video_set.order_by('order')
 
     @property
     def sorted_video_id_set(self):
+        """Return sorted identifiers"""
         return [x.identifier for x in self.video_set.order_by('order')[1:]]
 
 
