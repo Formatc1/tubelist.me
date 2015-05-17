@@ -1,10 +1,13 @@
 """Models for playlists"""
 
 from django.db import models
+from swampdragon.models import SelfPublishModel
+from playlists.serializers import PlaylistSerializer, VideoSerializer
 
 
-class Playlist(models.Model):
+class Playlist(SelfPublishModel, models.Model):
     """Class for playlists"""
+    serializer_class = PlaylistSerializer
     url = models.CharField(max_length=32, unique=True)
     name = models.CharField(max_length=100)
     author = models.EmailField(blank=True)
@@ -23,8 +26,9 @@ class Playlist(models.Model):
         return [x.identifier for x in self.video_set.order_by('order')[1:]]
 
 
-class Video(models.Model):
+class Video(SelfPublishModel, models.Model):
     """Class for videos"""
+    serializer_class = VideoSerializer
     playlist = models.ForeignKey(Playlist)
     identifier = models.SlugField(max_length=20)
     name = models.CharField(max_length=200)

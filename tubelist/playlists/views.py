@@ -42,8 +42,9 @@ def new(request):
     try:
         if request.POST['author'] != '':
             validate_email(request.POST['author'])
-        active_playlist = Playlist(url=url, name=request.POST['name'],
-            author=request.POST['author'])
+        active_playlist = Playlist(url=url,
+                                   name=request.POST['name'],
+                                   author=request.POST['author'])
         active_playlist.save()
     except (KeyError, ValidationError):
         return index(request, 'Incorrect e-mail adress')
@@ -62,7 +63,7 @@ def playlist(request, playlist_id):
             playlists.append(playlist_id)
             user_playlists_list = Playlist.objects.filter(url__in=playlists)
     else:
-        user_playlists_list = active_playlist
+        user_playlists_list = [active_playlist]
         playlists = playlist_id
     playlists = ':'.join(playlists)
     response = render(request, 'playlists/playlist.html', {
@@ -80,10 +81,11 @@ def search(request, playlist_id):
     if query == '':
         return HttpResponseRedirect(reverse('playlists:playlist',
             args=(active_playlist.url,)))
-    youtube = build("youtube", "v3",
-        developerKey=YT_DEVELOPER_KEY)
+    youtube = build("youtube", "v3", developerKey=YT_DEVELOPER_KEY)
     search_response = youtube.search().list(q=query,
-        part="id, snippet", type="video", maxResults=10).execute()
+                                            part="id, snippet",
+                                            type="video",
+                                            maxResults=10).execute()
     videos = []
     for search_result in search_response.get("items", []):
         if search_result["id"]["kind"] == "youtube#video":
@@ -109,7 +111,8 @@ def add(request, playlist_id, video_id, video_name):
         order = 1
     finally:
         active_playlist.video_set.add(Video(identifier=video_id,
-            name=video_name, order=order))
+                                            name=video_name,
+                                            order=order))
     return HttpResponseRedirect(reverse('playlists:playlist',
         args=(active_playlist.url,)))
 
@@ -145,7 +148,9 @@ def recover(request):
             txt_content = txt_template.render(email_context)
             html_content = html_template.render(email_context)
             msg = EmailMultiAlternatives('Tubelist - Recover Playlists',
-                txt_content, 'playlisty@tubelist.me', [request.POST['author']])
+                                         txt_content,
+                                         'playlisty@tubelist.me',
+                                         [request.POST['author']])
             msg.attach_alternative(html_content, "text/html")
             msg.send()
             return render(request, 'playlists/recover.html', {

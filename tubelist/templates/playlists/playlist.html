@@ -1,6 +1,10 @@
 {% extends "playlists/base.html" %}
 {% load staticfiles %}
 
+{% block html %}
+<html lang="pl" ng-app="PlaylistApp">
+{% endblock html %}
+
 {% block logo %}
     <div class="logo-small">
         <img src="{% static "playlists/img/logo-small.png" %}" alt="">
@@ -26,5 +30,18 @@
     <li>{{ video.name }} <a href="{% url 'playlists:delete' playlist.url video.identifier %}">Delete</a></li>
     {% endfor %}
 </ul>
+
+{% verbatim %}
+<div ng-controller="PlaylistCtrl">
+    <h3>{{ playlist.name }}</h3>
+    <pre>{{ playlist.url }}</pre>
+
+    <ul class="videos">
+        <li ng-repeat="video in videos">
+            {{ video.name }}
+        </li>
+    </ul>
+</div>
+{% endverbatim %}
 
 {% endblock %}

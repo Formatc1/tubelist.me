@@ -1,11 +1,26 @@
 {% load staticfiles %}
+{% load static swampdragon_tags %}
 <!DOCTYPE html>
+{% block html %}
 <html lang="pl">
+{% endblock html %}
 <head>
     <meta charset="UTF-8">
     <title>TubeList</title>
     <link rel="stylesheet" href="{% static "playlists/css/style.css" %}">
     <link rel="stylesheet" href="{% static "playlists/css/normalize.css" %}">
+
+    <!-- AngularJS -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.min.js"></script>
+
+    {% swampdragon_settings %}
+    <script type="text/javascript" src="{% static "swampdragon/js/dist/swampdragon.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "swampdragon/js/dist/datamapper.js" %}"></script>
+    <script type="text/javascript" src="{% static "swampdragon/js/angular/services.js" %}"></script>
+
+    <!-- To-do app -->
+    <script type="text/javascript" src="{% static "playlists/js/app.js" %}"></script>
+    <script type="text/javascript" src="{% static "playlists/js/controllers.js" %}"></script>
 </head>
 <body>
     <nav>

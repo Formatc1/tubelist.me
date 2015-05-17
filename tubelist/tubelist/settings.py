@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'swampdragon',
     'playlists',
 )
 
@@ -81,16 +82,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "../static"),
+    os.path.join(BASE_DIR, "static"),
 )
 
 STATIC_URL = '/static/'
 
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'templates'),
+)
+
 EMAIL_HOST = 'smtp.mailgun.org'
-EMAIL_HOST_USER = 'postmaster@sandboxc47aca8c7928420da0b941589ff27ce0\
-.mailgun.org'
+EMAIL_HOST_USER = 'postmaster@sandboxc47aca8c7928420da0b941589ff27ce0.\
+mailgun.org'
 EMAIL_HOST_PASSWORD = '0988173537bf72a75e8c80ff96599c90'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 YT_DEVELOPER_KEY = 'AIzaSyBotPyfxhqOQqsmjLCW19UTKw6w2jIrQrI'
+
+# SwampDragon settings
+SWAMP_DRAGON_CONNECTION = ('swampdragon.connections.sockjs_connection.\
+DjangoSubscriberConnection', '/data')
+DRAGON_URL = 'http://localhost:9999/'
