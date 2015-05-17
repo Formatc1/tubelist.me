@@ -6,15 +6,17 @@ PlaylistControllers.controller('PlaylistCtrl', ['$scope', '$dragon', function ($
     $scope.channel = 'playlists';
 
     $dragon.onReady(function() {
-        $dragon.subscribe('video', $scope.channel, {playlist__id: 1}).then(function(response) {
+        var PlaylistID = $('#videos-list').attr('data-id');
+
+        $dragon.subscribe('video', $scope.channel, {playlist__id: PlaylistID}).then(function(response) {
             $scope.dataMapper = new DataMapper(response.data);
         });
 
-        $dragon.getSingle('playlist', {id:1}).then(function(response) {
+        $dragon.getSingle('playlist', {id:PlaylistID}).then(function(response) {
             $scope.playlist = response.data;
         });
 
-        $dragon.getList('video', {list_id:1}).then(function(response) {
+        $dragon.getList('video', {list_id:PlaylistID}).then(function(response) {
             $scope.videos = response.data;
         });
     });

@@ -31,8 +31,8 @@
     {% endfor %}
 </ul>
 
-{% verbatim %}
-<div ng-controller="PlaylistCtrl">
+<div ng-controller="PlaylistCtrl" data-id="{{ playlist.id }}" id="videos-list">
+    {% verbatim %}
     <h3>{{ playlist.name }}</h3>
     <pre>{{ playlist.url }}</pre>
 
@@ -41,7 +41,7 @@
             {{ video.name }}
         </li>
     </ul>
+    {% endverbatim %}
 </div>
-{% endverbatim %}
 
 {% endblock %}
