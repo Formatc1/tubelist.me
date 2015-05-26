@@ -6,7 +6,7 @@ from playlists.models import Playlist
 USERS = {}
 
 
-def change_order(data):
+def change_order(web_socket, data):
     active_playlist = get_object_or_404(Playlist, pk=data["id"])
     active_video = active_playlist.video_set.get(pk=data["video_id"])
     if data["position"] > 0:
@@ -23,10 +23,11 @@ def change_order(data):
         data["position"] = -data["position"]
     active_video.save()
     if str(active_playlist.id) in USERS:
-            for user in USERS[str(active_playlist.id)]:
+            for user in [user for user in USERS[str(active_playlist.id)] if user != web_socket]:
                 user.write_message(json.dumps({"task": "change_order",
                                                "id": active_video.id,
-                                               "position": data["position"]
+                                               "position": data["position"],
+                                               "index": data["index"]
                                                }))
 
 
@@ -47,7 +48,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def on_message(self, message):
         data = json.loads(message)
         if data["task"] == "change_order":
-            change_order(data)
+            change_order(self, data)
         # active_users = [client for client in USERS.values() if self in client]
         # for user in active_users[0]:
         #     user.write_message(u"ws-echo: %s" % message)
