@@ -1,0 +1,18 @@
+{% extends "playlists/base.html" %}
+
+{% block content %}
+<div class="form center">
+    <form class="new" action="{% url 'playlists:new' %}" method="post">
+        <div class="inputs">
+            {% csrf_token %}
+            <input class="name" type="text" name="name" value="New Playlist" />
+            <input class="e-mail" type="e-mail" name="author" value="E-mail" />
+        </div>
+        <input class="submit" type="submit" value="Create Playlist" />
+    </form>
+</div>
+<br class="clear">
+{% if error %}
+    <div class="error">{{ error }}</div>
+{% endif %}
+{% endblock %}
