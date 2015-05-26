@@ -1,0 +1,59 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>TubeList</title>
+    <link rel="stylesheet" href="{% static "playlists/css/style.css" %}">
+    <link rel="stylesheet" href="{% static "playlists/css/normalize.css" %}">
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    {% block scripts %}
+    {% endblock scripts %}
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'playlists:index' %}">HOME</a></li>
+            <li>|</li>
+            <li><a href="#">HOW TO</a></li>
+            <li>|</li>
+            <li><a href="{% url 'playlists:recover' %}">RECOVER</a></li>
+            <li>&nbsp;</li>
+            {% block user_playlists %}
+                {% if user_playlists %}
+                    <li>MY PLAYLISTS:
+                        <ul>
+                            {% for playlist in user_playlists %}
+                                <li><a href="{% url 'playlists:playlist' playlist.url %}">{{ playlist.name }}</a></li>
+                            {% endfor %}
+
+                        </ul>
+                    </li> 
+                {% endif %}
+            {% endblock user_playlists %}
+        </ul>
+    </nav>
+    {% block logo %}
+        <div id="logo">
+            <img src="{% static "playlists/img/logo.png" %}" alt="">
+            <h1>Create YouTube playlists with ease!</h1>
+
+        </div>
+    {% endblock logo %}
+    <div class="content">
+        {% block content %}
+
+        {% endblock content %}
+    </div>
+    <footer>
+        <div class="wrapper">
+            <div>Authors:</div>
+            <div class="separator">Adam Gołąb</div>
+            <div class="separator">Maciej Szymczak</div>
+        </div>
+    </footer>
+    {% block footer_scripts %}
+    {% endblock footer_scripts %}
+</body>
+</html>

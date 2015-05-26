@@ -1,0 +1,66 @@
+{% extends "playlists/base.html" %}
+{% load staticfiles %}
+
+{% block scripts %}
+    <script src="{% static "playlists/js/ws.js" %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+{% endblock scripts %}
+
+{% block logo %}
+    <div class="logo-small">
+        <img src="{% static "playlists/img/logo-small.png" %}" alt="">
+        <h3> : {{ playlist.name }}</h3>
+    </div>
+{% endblock logo %}
+
+{% block content %}
+{% if playlist.sorted_video_set.all|length > 0 %}
+<div class="video">
+    <iframe id="ytplayer" type="text/html" width="640" height="390" 
+    src="http://www.youtube.com/embed/{{ playlist.first_video_id }}?autoplay=0&enablejsapi=1&playlist={{ playlist.sorted_video_id_set|join:"," }}" frameborder="0"></iframe>
+</div>
+{% endif %} 
+
+<form class="form" action="{% url 'playlists:search' playlist.url %}" method="get">
+    <input class="query" type="text" name="q" value="" />
+    <input class="submit" type="submit" value="Szukaj" />
+</form>
+
+<!-- <ul class="videos">
+    {% for video in playlist.sorted_video_set.all %}
+    <li>{{ video.name }} <a href="{% url 'playlists:delete' playlist.url video.pk %}">Delete</a></li>
+    {% endfor %}
+</ul> -->
+
+<div data-id="{{ playlist.id }}" id="videos-list">
+    <ul class="videos">
+        {% for video in playlist.sorted_video_set.all %}
+            <li data-id="{{ video.pk }}" data-order="{{ video.order }}">{{ video.name }} <a href="{% url 'playlists:delete' playlist.url video.pk %}">Delete</a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock content %}
+
+{% block footer_scripts %}
+    <script>
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('ytplayer', {
+            events: {
+                'onReady': onPlayerReady,
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        // event.target.playVideo();
+    }
+
+    </script>
+{% endblock footer_scripts %}
