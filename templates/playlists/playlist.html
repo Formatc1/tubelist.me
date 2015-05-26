@@ -26,12 +26,6 @@
     <input class="submit" type="submit" value="Szukaj" />
 </form>
 
-<!-- <ul class="videos">
-    {% for video in playlist.sorted_video_set.all %}
-    <li>{{ video.name }} <a href="{% url 'playlists:delete' playlist.url video.pk %}">Delete</a></li>
-    {% endfor %}
-</ul> -->
-
 <div data-id="{{ playlist.id }}" id="videos-list">
     <ul class="videos">
         {% for video in playlist.sorted_video_set.all %}
