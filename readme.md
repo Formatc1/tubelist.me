@@ -34,3 +34,9 @@ Przy pierwszym uruchamianiu należy wykonać dodatkowo polecenia:
     $ python manage.py migrate
     $ python manage.py collectstatic
     
+Działająca wersja
+---------------------------------
+
+Działająca wersja aplikacji dostępna jest pod adresem:
+
+    http://tubelist-formatc.rhcloud.com/
