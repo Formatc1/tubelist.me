@@ -34,25 +34,28 @@ def index(request, error=None):
     return render(request, 'playlists/index.html', {
         'user_playlists': user_playlists_list,
         'error': error
-        })
+    })
 
 
 def new(request):
     """new view"""
-    url = urlsafe_b64encode(pack(">Q",
-        int(datetime.now().strftime('%y%m%d%H%M%S%f')))).replace('=', '')
+    url = urlsafe_b64encode(
+        pack(">Q", int(datetime.now().
+                       strftime('%y%m%d%H%M%S%f')))).replace('=', '')
     try:
-        if request.POST['author'] != '':
-            validate_email(request.POST['author'])
+        if request.POST.get('author') != '':
+            validate_email(request.POST.get('author'))
+        name = request.POST.get('name') if request.POST.get(
+            'name') else 'Playlist'
         active_playlist = Playlist(url=url,
-                                   name=request.POST['name'],
-                                   author=request.POST['author'])
+                                   name=name,
+                                   author=request.POST.get('author'))
         active_playlist.save()
     except (KeyError, ValidationError):
         return index(request, 'Incorrect e-mail adress')
     else:
         return HttpResponseRedirect(reverse('playlists:playlist',
-            args=(active_playlist.url,)))
+                                            args=(active_playlist.url,)))
 
 
 def playlist(request, playlist_id):
@@ -71,7 +74,7 @@ def playlist(request, playlist_id):
     response = render(request, 'playlists/playlist.html', {
         'playlist': active_playlist,
         'user_playlists': user_playlists_list
-        })
+    })
     response.set_cookie(key='playlists', value=playlists, max_age=31536000)
     return response
 
@@ -80,28 +83,27 @@ def search(request, playlist_id):
     """search for video on YouTube view"""
     active_playlist = get_object_or_404(Playlist, url=playlist_id)
     query = request.GET.get('q', '')
+    page_token = request.GET.get('page', '')
     if query == '':
         return HttpResponseRedirect(reverse('playlists:playlist',
-            args=(active_playlist.url,)))
+                                            args=(active_playlist.url,)))
     youtube = build("youtube", "v3", developerKey=YT_DEVELOPER_KEY)
     search_response = youtube.search().list(q=query,
                                             part="id, snippet",
                                             type="video",
+                                            pageToken=page_token,
                                             maxResults=10).execute()
-    videos = []
-    for search_result in search_response.get("items", []):
-        if search_result["id"]["kind"] == "youtube#video":
-            video = {}
-            video["id"] = search_result["id"]["videoId"]
-            video["name"] = search_result["snippet"]["title"]
-            videos.append(video)
+    videos = [video for video in search_response["items"]
+              if video["id"]["kind"] == "youtube#video"]
     user_playlists_list = get_user_playlists(request)
     return render(request, 'playlists/search.html', {
         'query': query,
         'videos': videos,
+        'prev_page_token': search_response.get("prevPageToken"),
+        'next_page_token': search_response.get("nextPageToken"),
         'playlist_id': playlist_id,
         'user_playlists': user_playlists_list
-        })
+    })
 
 
 def add(request, playlist_id, video_id, video_name):
@@ -126,7 +128,7 @@ def add(request, playlist_id, video_id, video_name):
                                                "order": last_order
                                                }))
     return HttpResponseRedirect(reverse('playlists:playlist',
-        args=(active_playlist.url,)))
+                                        args=(active_playlist.url,)))
 
 
 def delete(request, playlist_id, video_id):
@@ -143,18 +145,18 @@ def delete(request, playlist_id, video_id):
     except (ObjectDoesNotExist, IndexError):
         pass
     return HttpResponseRedirect(reverse('playlists:playlist',
-        args=(active_playlist.url,)))
+                                        args=(active_playlist.url,)))
 
 
 def recover(request):
     """recover playlists and send identifiers to email view"""
     user_playlists_list = get_user_playlists(request)
     if 'author' in request.POST.keys():
-        playlists = Playlist.objects.filter(author=request.POST['author'])
+        playlists = Playlist.objects.filter(author=request.POST.get('author'))
         if not playlists:
             return render(request, 'playlists/recover.html', {
                 'user_playlists': user_playlists_list
-                })
+            })
         else:
             baseurl = "%s%s" % ('https://', get_current_site(request).domain)
             txt_template = get_template('playlists/email.txt')
@@ -162,20 +164,20 @@ def recover(request):
             email_context = Context({
                 'user_playlists': user_playlists_list,
                 'baseurl': baseurl
-                })
+            })
             txt_content = txt_template.render(email_context)
             html_content = html_template.render(email_context)
             msg = EmailMultiAlternatives('Tubelist - Recover Playlists',
                                          txt_content,
                                          'playlisty@tubelist.me',
-                                         [request.POST['author']])
+                                         [request.POST.get('author')])
             msg.attach_alternative(html_content, "text/html")
             msg.send()
             return render(request, 'playlists/recover.html', {
-                'message': request.POST['author'],
+                'message': request.POST.get('author'),
                 'user_playlists': user_playlists_list
-                })
+            })
     else:
         return render(request, 'playlists/recover-form.html', {
             'user_playlists': user_playlists_list
-            })
+        })

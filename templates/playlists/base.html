@@ -13,55 +13,57 @@
     {% endblock scripts %}
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="{% url 'playlists:index' %}">HOME</a></li>
-                <li>|</li>
-                <li><a href="#">HOW TO</a></li>
-                <li>|</li>
-                <li><a href="{% url 'playlists:recover' %}">RECOVER</a></li>
-                <li>&nbsp;</li>
-            </ul>
-            {% if user_playlists %}
-                <p class="my_playlists">MY PLAYLISTS: </p>
-                <button class="hamburger">&#9776;</button>
-                <button class="cross">&#735;</button>
-            {% endif %}
-        </nav>
-         {% block user_playlists %}
-            {% if user_playlists %}
-            <div id="playlist_nav">
-              
-                    <ul>
-                        {% for playlist in user_playlists %}
-                            <li><a href="{% url 'playlists:playlist' playlist.url %}">{{ playlist.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            </div> 
-            {% endif %}
-        {% endblock user_playlists %}
-    </header>
-    {% block logo %}
-        <div id="logo">
-            <img src="{% static "playlists/img/logo.png" %}" alt="">
-            <h1>Create YouTube playlists with ease!</h1>
-        </div>
-    {% endblock logo %}
-    <div class="content">
-        {% block content %}
+    <div id="all">
+        <header>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'playlists:index' %}">HOME</a></li>
+                    <li>|</li>
+                    <li><a href="#">HOW TO</a></li>
+                    <li>|</li>
+                    <li><a href="{% url 'playlists:recover' %}">RECOVER</a></li>
+                    <li>&nbsp;</li>
+                </ul>
+                {% if user_playlists %}
+                    <p class="my_playlists">MY PLAYLISTS: </p>
+                    <button class="hamburger">&#9776;</button>
+                    <button class="cross">&#735;</button>
+                {% endif %}
+            </nav>
+             {% block user_playlists %}
+                {% if user_playlists %}
+                <div id="playlist_nav">
+                  
+                        <ul>
+                            {% for playlist in user_playlists %}
+                                <li><a href="{% url 'playlists:playlist' playlist.url %}">{{ playlist.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </div> 
+                {% endif %}
+            {% endblock user_playlists %}
+        </header>
+        {% block logo %}
+            <div id="logo">
+                <img src="{% static "playlists/img/logo.png" %}" alt="">
+                <h1>Create YouTube playlists with ease!</h1>
+            </div>
+        {% endblock logo %}
+        <div class="content">
+            {% block content %}
 
-        {% endblock content %}
-    </div>
-    <footer>
-        <div class="wrapper">
-            <div>Authors:</div>
-            <div class="separator">Adam Gołąb</div>
-            <div class="separator">Maciej Szymczak</div>
+            {% endblock content %}
         </div>
-    </footer>
-    {% block footer_scripts %}
-    {% endblock footer_scripts %}
+        <footer>
+            <div class="wrapper">
+                <div>Authors:</div>
+                <div class="separator">Adam Gołąb</div>
+                <div class="separator">Maciej Szymczak</div>
+            </div>
+        </footer>
+        {% block footer_scripts %}
+        {% endblock footer_scripts %}
+    </div>
 </body>
 </html>

@@ -5,6 +5,9 @@
 
 body {
     background: url(../img/beige.png) repeat #f5f5f5;
+    position: relative;
+    padding-bottom: 75px;
+    font-family: LatoRegular, sans-serif;
 }
 
 a, a:visited, a:link {
@@ -22,7 +25,7 @@ br.clear {
 }
 
 nav {
-    font-family: LatoRegular;
+    font-family: LatoRegular, sans-serif;
     color: #42353C;
     position: relative;
     top: 0px;
@@ -147,7 +150,7 @@ header{
     line-height: 1.4em;
 }
 
-.videos li{
+.videos li {
     cursor: move;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -157,8 +160,31 @@ header{
     user-select: none;
 }
 
-.videos a{
+.videos a, .videos a:link, .videos a:visited {
     color: #C23E4D;
+}
+
+.videos a:hover, .videos a:focus, .videos a:active {
+    color: #920E1D;
+}
+
+.search-results li {
+    cursor: inherit;
+}
+
+.search-results span {
+    position: relative;
+    bottom: 40px;
+    margin: 10px;
+}
+
+a.navigation, a:link.navigation, a:visited.navigation {
+    color: #C23E4D;
+    margin: 10px;
+}
+
+a:hover.navigation, a:focus.navigation, a:active.navigation {
+    color: #920E1D;
 }
 
 .form.center {
@@ -235,7 +261,7 @@ header{
 footer {
     font-size: 0.8em;
     position: absolute;
-    bottom: 0;
+    bottom: -10px;
     left: 50%;
     clear: both;
     margin: 10px;

@@ -9,9 +9,15 @@
 {% endblock %}
 
 {% block content %}
-<ul class="videos">
+<ul class="search-results videos">
     {% for video in videos %}
-    <li>{{ video.name }} - <a href="{% url 'playlists:add' playlist_id video.id video.name %}">Add</a></li>
+    <li><img src="{{ video.snippet.thumbnails.default.url }}" alt=""><span>{{ video.snippet.title }} - <a href="{% url 'playlists:add' playlist_id video.id.videoId video.snippet.title %}">Add</a></span></li>
     {% endfor %}
 </ul>
+{% if prev_page_token %}
+    <a class="navigation" href="{% url 'playlists:search' playlist_id %}?q={{ query }}&page={{ prev_page_token }}">Previous Page</a>
+{% endif %}
+{% if next_page_token %}
+    <a class="navigation" href="{% url 'playlists:search' playlist_id %}?q={{ query }}&page={{ next_page_token }}">Next Page</a>
+{% endif %}
 {% endblock %}

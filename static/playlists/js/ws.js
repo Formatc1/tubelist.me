@@ -69,7 +69,7 @@ function ws_initialize(id) {
         ws.onclose = function () {
             // var at = Date(Date.now());
             // ztextarea.value = at + ": WebSocket closed!\n" + ztextarea.value;
-            alert("closed");
+            // alert("closed");
         };
 
     }

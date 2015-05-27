@@ -5,8 +5,8 @@
     <form class="new" action="{% url 'playlists:new' %}" method="post">
         <div class="inputs">
             {% csrf_token %}
-            <input class="name" type="text" name="name" value="New Playlist" />
-            <input class="e-mail" type="e-mail" name="author" value="E-mail" />
+            <input class="name" type="text" name="name" placeholder="New Playlist" />
+            <input class="e-mail" type="e-mail" name="author" placeholder="E-mail" />
         </div>
         <input class="submit" type="submit" value="Create Playlist" />
     </form>
