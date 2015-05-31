@@ -181,3 +181,8 @@ def recover(request):
         return render(request, 'playlists/recover-form.html', {
             'user_playlists': user_playlists_list
         })
+
+
+def how_to(request):
+    """View for How To page"""
+    return render(request, 'playlists/how-to.html')

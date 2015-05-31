@@ -187,6 +187,18 @@ a:hover.navigation, a:focus.navigation, a:active.navigation {
     color: #920E1D;
 }
 
+#how-to {
+    margin: 0 3em;
+}
+
+#how-to a, #how-to a:link, #how-to a:visited {
+    color: #C23E4D;
+}
+
+#how-to a:hover, #how-to a:focus, #how-to a:active {
+    color: #920E1D;
+}
+
 .form.center {
     width: 465px;
     position: relative;

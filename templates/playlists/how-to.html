@@ -1,0 +1,11 @@
+{% extends "playlists/base.html" %}
+
+{% block content %}
+    <div id="how-to">
+        <h1>Create a playlist</h1>
+        <p>Go back to the <a href="{% url 'playlists:index' %}">homepage</a>. Type name of your playlist, when want to recover playlist in future type your e-mail addres and click “Create Playlist“ and the playlist is running. Now start adding videos to your newly created playlist. It's just that easy!</p>
+        <h1>Cooperate on the playlist</h1>
+        <p>Share the url address with your friends that should be able to add videos. Now they can open your playlist. Then it's runnig and you guys are now cooperateing on the list. Anyone who open the link will join the list automatically.</p>
+        <h1>Recover Playlist</h1>
+        <p>When you forget link to your playlist you can use the recover option and send e-mail with links to playlists created by you. Go to the <a href="{% url 'playlists:recover' %}">recover</a> page and type e-mail address which you provided during creating playlist.</p>
+{% endblock content %}
