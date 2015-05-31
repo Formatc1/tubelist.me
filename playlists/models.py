@@ -19,6 +19,7 @@ class Playlist(models.Model):
 
     @property
     def first_video_id(self):
+        """Return id for first video"""
         return self.video_set.order_by('order')[0].identifier
 
     @property

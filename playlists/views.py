@@ -122,7 +122,7 @@ def add(request, playlist_id, video_id, video_name):
         if str(active_playlist.id) in USERS:
             for user in USERS[str(active_playlist.id)]:
                 user.write_message(json.dumps({"task": "add",
-                                               "id": new_video.id,
+                                               "id": new_video.pk,
                                                "identifier": video_id,
                                                "name": video_name,
                                                "order": last_order

@@ -1,3 +1,6 @@
+"""
+Module for setup
+"""
 from setuptools import setup
 
 setup(
@@ -6,5 +9,5 @@ setup(
     description='OpenShift TubeList App',
     author='Adam Golab',
     author_email='edek-150@o2.pl',
-    url='http://tubelist-formatc.rhcloud.com/',
+    url='https://github.com/Formatc1/tubelist.me',
 )

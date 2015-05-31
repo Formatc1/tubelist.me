@@ -1,5 +1,10 @@
 #!/bin/env python
 
+"""
+Main file to run application.
+It start server on ip: 127.0.0.1:8080
+"""
+
 import os
 import sys
 import tornado.httpserver
@@ -11,6 +16,9 @@ import app_server as app
 
 # Return the libs path (this path is appended to module search path/sys.path).
 def get_libs_path():
+    """
+    Get path to libraries depends it's started on localhost or OpenShift
+    """
     zpath = os.getenv("OPENSHIFT_REPO_DIR")
     zpath = zpath if zpath else "./"
     return os.path.abspath(os.path.join(zpath, "libs"))
@@ -18,11 +26,17 @@ def get_libs_path():
 
 # Return the interface we need to bind to.
 def get_bind_interface():
+    """
+    Get ip address depends it's started on localhost or OpenShift
+    """
     ipaddr = os.getenv("OPENSHIFT_PYTHON_IP")
     return ipaddr if ipaddr else "127.0.0.1"
 
 
 def get_bind_interface_port():
+    """
+    Get port number depends it's started on localhost or OpenShift
+    """
     port = os.getenv("OPENSHIFT_PYTHON_PORT")
     try:
         port = int(port)
@@ -33,6 +47,9 @@ def get_bind_interface_port():
 
 # Server main.
 def start_tornado():
+    """
+    Start Tornado web server
+    """
     # Tornado server address and port number.
     tornado.options.define("address", default=get_bind_interface(),
                            help="network address/interface to bind to")
@@ -46,10 +63,6 @@ def start_tornado():
     tornado.ioloop.IOLoop.instance().start()
 
 
-#
-# __main__:  main code.
-#
 if __name__ == "__main__":
     sys.path.append(get_libs_path())
     start_tornado()
-

@@ -4,7 +4,7 @@
 <div class="form">
     <form action="{% url 'playlists:recover' %}" method="post">
         {% csrf_token %}
-        <input class="e-mail" type="e-mail" name="author" value="E-mail" />
+        <input class="e-mail" type="e-mail" name="author" placeholder="E-mail" />
         <input class="submit" type="submit" value="Wyślij" />
     </form>
 </div>

@@ -1,3 +1,6 @@
+"""
+File to handle webSockets
+"""
 import tornado.websocket
 import json
 from django.shortcuts import get_object_or_404
@@ -7,33 +10,46 @@ USERS = {}
 
 
 def change_order(web_socket, data):
+    """
+    change videos order in specific playlist
+    """
     active_playlist = get_object_or_404(Playlist, pk=data["id"])
     active_video = active_playlist.video_set.get(pk=data["video_id"])
     if data["position"] > 0:
-        for video in active_playlist.sorted_video_set.filter(order__gt=active_video.order)[:data["position"]]:
+        for video in active_playlist.sorted_video_set.\
+                filter(order__gt=active_video.order)[:data["position"]]:
             video.order = video.order - 1
             video.save()
-        active_video.order = active_playlist.sorted_video_set.filter(order__gte=active_video.order)[data["position"]].order + 1
+        active_video.order = active_playlist.sorted_video_set.filter(
+            order__gte=active_video.order)[data["position"]].order + 1
     else:
         data["position"] = -data["position"]
-        for video in active_playlist.video_set.order_by('-order').filter(order__lt=active_video.order)[:data["position"]]:
+        for video in active_playlist.video_set.order_by('-order').\
+                filter(order__lt=active_video.order)[:data["position"]]:
             video.order = video.order + 1
             video.save()
-        active_video.order = active_playlist.video_set.order_by('-order').filter(order__lte=active_video.order)[data["position"]].order - 1
+        active_video.order = active_playlist.video_set.order_by('-order').\
+            filter(order__lte=active_video.order)[data["position"]].order - 1
         data["position"] = -data["position"]
     active_video.save()
     if str(active_playlist.id) in USERS:
-            for user in [user for user in USERS[str(active_playlist.id)] if user != web_socket]:
-                user.write_message(json.dumps({"task": "change_order",
-                                               "id": active_video.id,
-                                               "position": data["position"],
-                                               "index": data["index"]
-                                               }))
+        for user in [user for user in USERS[str(active_playlist.id)]
+                     if user != web_socket]:
+            user.write_message(json.dumps({"task": "change_order",
+                                           "id": active_video.id,
+                                           "position": data["position"],
+                                           "index": data["index"]
+                                           }))
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
+
+    """
+    Class WebSocket Handler
+    """
+
     def data_received(self, chunk):
-        # Don't do anything for now
+        # Don't do anything
         pass
 
     def open(self, room=0):
@@ -41,18 +57,11 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             USERS[room].append(self)
         else:
             USERS[room] = [self]
-        # for client in USERS[room]:
-            # client.write_message(u"new client connected to room %s" % room)
-        self.write_message(u"ws-echo: 418 I'm a teapot (as per RFC 2324) %s" % room)
 
     def on_message(self, message):
         data = json.loads(message)
         if data["task"] == "change_order":
             change_order(self, data)
-        # active_users = [client for client in USERS.values() if self in client]
-        # for user in active_users[0]:
-        #     user.write_message(u"ws-echo: %s" % message)
-        # self.write_message(u"ws-echo: " + message)
 
     def on_close(self):
         active_room = [key for key, value in USERS.items() if self in value]

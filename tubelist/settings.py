@@ -22,11 +22,12 @@ else:
     SECRET_KEY = ')_7av^!cy(wfx=k#3*7x+(=j^fzv+ot^1@sh9s9t=8$bu@r(z$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# adjust to turn off when on Openshift, but allow an environment variable to override on PAAS
+# adjust to turn off when on Openshift,
+# but allow an environment variable to override on PAAS
 DEBUG = not ON_PAAS
 DEBUG = DEBUG or 'DEBUG' in os.environ
 if ON_PAAS and DEBUG:
-    print("*** Warning - Debug mode is on ***")
+    print "*** Warning - Debug mode is on ***"
 
 TEMPLATE_DEBUG = True
 
@@ -128,7 +129,8 @@ STATICFILES_DIRS = (
 )
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Put strings here, like "/home/html/django_templates"
+    # or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(BASE_DIR, 'templates'),
