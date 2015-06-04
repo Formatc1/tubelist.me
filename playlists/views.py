@@ -13,7 +13,6 @@ from apiclient.discovery import build
 from tubelist.settings import YT_DEVELOPER_KEY
 from django.template.loader import get_template
 from django.template import Context
-from django.contrib.sites.models import get_current_site
 from playlists.web_socket_handler import USERS
 import json
 # from apiclient.errors import HttpError
@@ -43,7 +42,7 @@ def new(request):
         pack(">Q", int(datetime.now().
                        strftime('%y%m%d%H%M%S%f')))).replace('=', '')
     try:
-        if request.POST.get('author') != '':
+        if request.POST.get('author'):
             validate_email(request.POST.get('author'))
         name = request.POST.get('name') if request.POST.get(
             'name') else 'Playlist'
@@ -106,9 +105,10 @@ def search(request, playlist_id):
     })
 
 
-def add(request, playlist_id, video_id, video_name):
+def add(request, playlist_id, video_id):
     """add new video to playlist"""
     active_playlist = get_object_or_404(Playlist, url=playlist_id)
+    video_name = request.GET.get('name')
     try:
         last_order = active_playlist.sorted_video_set.latest('order').order + 1
     except ObjectDoesNotExist:
@@ -158,7 +158,7 @@ def recover(request):
                 'user_playlists': user_playlists_list
             })
         else:
-            baseurl = "%s%s" % ('https://', get_current_site(request).domain)
+            baseurl = "%s%s" % ('https://', request.site)
             txt_template = get_template('playlists/email.txt')
             html_template = get_template('playlists/email.html')
             email_context = Context({
