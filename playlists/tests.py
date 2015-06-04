@@ -8,14 +8,17 @@ from playlists.models import Playlist
 class PlaylistsTestCase(TestCase):
     """Class for testing playlists module"""
     def setUp(self):
+        """Init Client"""
         self.c = Client()
 
     def test_home(self):
+        """Test Homepage"""
         response = self.c.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Create Playlist')
 
     def test_new_playlist_without_email(self):
+        """Test adding new playlist without email address"""
         response = self.c.post('/new/',
                                data={'name': 'Test Playlist', 'author': ''},
                                follow=True)
@@ -25,6 +28,7 @@ class PlaylistsTestCase(TestCase):
         self.assertIsNotNone(response.context['playlist'])
 
     def test_new_playlist_with_wrong_email(self):
+        """test adding new playlist with wrong email"""
         response = self.c.post('/new/',
                                data={'name': 'Test Playlist',
                                      'author': 'wrong_email'},
@@ -42,6 +46,7 @@ class PlaylistsTestCase(TestCase):
         self.assertContains(response, 'Incorrect e-mail adress')
 
     def test_new_playlist_with_correct_email(self):
+        """test adding new playlist with correct email"""
         response = self.c.post('/new/',
                                data={'name': 'Test Playlist',
                                      'author': 'test@mail.com'},
@@ -52,6 +57,7 @@ class PlaylistsTestCase(TestCase):
         self.assertIsNotNone(response.context['playlist'])
 
     def test_search(self):
+        """test searching for new video"""
         response = self.c.post('/new/',
                                data={'name': 'Test Playlist',
                                      'author': 'test@mail.com'},
@@ -66,6 +72,7 @@ class PlaylistsTestCase(TestCase):
                       response.context['videos'][0]['snippet']['title'])
 
     def test_add_video(self):
+        """test adding new video to playlist"""
         response = self.c.post('/new/',
                                data={'name': 'Test Playlist',
                                      'author': 'test@mail.com'},
@@ -87,6 +94,7 @@ class PlaylistsTestCase(TestCase):
                                 in playlist.video_set.all()]))
 
     def test_delete_video(self):
+        """test deleting video from playlist"""
         response = self.c.post('/new/',
                                data={'name': 'Test Playlist',
                                      'author': 'test@mail.com'},
