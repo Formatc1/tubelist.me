@@ -11,7 +11,7 @@
 {% block content %}
 <ul class="search-results videos">
     {% for video in videos %}
-    <li><img src="{{ video.snippet.thumbnails.default.url }}" alt=""><span>{{ video.snippet.title }} - <a href="{% url 'playlists:add' playlist_id video.id.videoId video.snippet.title %}">Add</a></span></li>
+    <li><img src="{{ video.snippet.thumbnails.default.url }}" alt=""><span>{{ video.snippet.title }} - <a href="{% url 'playlists:add' playlist_id video.id.videoId %}?name={{ video.snippet.title|urlencode }}">Add</a></span></li>
     {% endfor %}
 </ul>
 {% if prev_page_token %}
