@@ -148,6 +148,16 @@ def delete(request, playlist_id, video_id):
                                         args=(active_playlist.url,)))
 
 
+def change_name(request, playlist_id):
+    """change name of existing playlists"""
+    active_playlist = get_object_or_404(Playlist, url=playlist_id)
+    if request.GET.get('name', ''):
+        active_playlist.name = request.GET.get('name')
+        active_playlist.save()
+    return HttpResponseRedirect(reverse('playlists:playlist',
+                                        args=(active_playlist.url,)))
+
+
 def recover(request):
     """recover playlists and send identifiers to email view"""
     user_playlists_list = get_user_playlists(request)
