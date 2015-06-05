@@ -9,7 +9,7 @@
 {% block logo %}
     <div class="logo-small">
         <img src="{% static "playlists/img/logo-small.png" %}" alt="">
-        <h3> : {{ playlist.name }}</h3>
+        <h3> :</h3><h3 contenteditable="true" id="playlist-title" data-url="{{ playlist.url }}">{{ playlist.name }}</h3>
     </div>
 {% endblock logo %}
 

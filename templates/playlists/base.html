@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>TubeList</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static "playlists/img/favicon.ico" %}">
     <link rel="stylesheet" href="{% static "playlists/css/style.css" %}">
     <link rel="stylesheet" href="{% static "playlists/css/normalize.css" %}">
     <!-- jQuery -->
@@ -30,19 +31,17 @@
                     <button class="cross">&#735;</button>
                 {% endif %}
             </nav>
-             {% block user_playlists %}
-                {% if user_playlists %}
-                <div id="playlist_nav">
-                  
-                        <ul>
-                            {% for playlist in user_playlists %}
-                                <li><a href="{% url 'playlists:playlist' playlist.url %}">{{ playlist.name }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                </div> 
-                {% endif %}
-            {% endblock user_playlists %}
+            {% if user_playlists %}
+            <div id="playlist_nav">
+              
+                    <ul>
+                        {% for playlist in user_playlists %}
+                            <li><a href="{% url 'playlists:playlist' playlist.url %}">{{ playlist.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </div> 
+            {% endif %}
         </header>
         {% block logo %}
             <div id="logo">

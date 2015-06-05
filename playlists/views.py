@@ -151,9 +151,15 @@ def delete(request, playlist_id, video_id):
 def change_name(request, playlist_id):
     """change name of existing playlists"""
     active_playlist = get_object_or_404(Playlist, url=playlist_id)
-    if request.GET.get('name', ''):
-        active_playlist.name = request.GET.get('name')
+    name = request.GET.get('name', '')
+    if name:
+        active_playlist.name = name
         active_playlist.save()
+    if str(active_playlist.id) in USERS:
+        for user in USERS[str(active_playlist.id)]:
+            user.write_message(json.dumps({"task": "change_name",
+                                           "name": name,
+                                           }))
     return HttpResponseRedirect(reverse('playlists:playlist',
                                         args=(active_playlist.url,)))
 
