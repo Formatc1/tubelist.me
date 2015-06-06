@@ -96,21 +96,67 @@ jQuery(document).ready(function($) {
             ws_send(JSON.stringify(data));
         }
     });
+
     $('#playlist-title').on("blur", function(){
         var url = $(this).attr('data-url');
         $.ajax({
             url: '/'+ url +'/change-name/',
-            data: {name: $(this).text()},
+            data: {name: $(this).text()}
         });
     });
+
     $('#videos-list').on('click', 'a.delete-video', function(event) {
         event.preventDefault();
         var url = $(this).attr('href');
         var id = $(this).parent('li').attr('data-identifier');
         $.ajax({
-            url: url,
+            url: url
         });
         return false;
+    });
+
+    $('#search').on('submit', function(event) {
+        event.preventDefault();
+        var url = $(this).attr('action');
+        var query = $(this).children('input.query').val();
+        $.ajax({
+            url: url+'ajax/',
+            data: {q: query}
+        })
+        .done(function(html) {
+            $('#videos-list').hide();
+            $('.search-placeholder').html(html).show();
+        })        
+    });
+
+    $('.search-placeholder').on('click', 'a.add', function(event) {
+        event.preventDefault();
+        $('.search-placeholder').hide();
+        var url = $(this).attr('href');
+        $.ajax({
+            url: url
+        })
+        .done(function() {
+            $('#videos-list').show();
+        })
+    });
+
+    $('.search-placeholder').on('click', 'a.navigation', function(event) {
+        event.preventDefault();
+        $('.search-placeholder').hide();
+        var url = $(this).attr('href');
+        $.ajax({
+            url: url
+        })
+        .done(function(html) {
+            $('.search-placeholder').html(html).show();
+        })
+    });
+
+    $('.search-placeholder').on('click', 'a.back', function(event) {
+        event.preventDefault();
+        $('#videos-list').show();
+        $('.search-placeholder').hide();
     });
 });
 

@@ -21,7 +21,7 @@
 </div>
 {% endif %} 
 
-<form class="form" action="{% url 'playlists:search' playlist.url %}" method="get">
+<form class="form" action="{% url 'playlists:search' playlist.url %}" method="get" id="search">
     <input class="query" type="text" name="q" value="" />
     <input class="submit" type="submit" value="Szukaj" />
 </form>
@@ -33,7 +33,8 @@
         {% endfor %}
     </ul>
 </div>
-
-<span id="test">Click</span>
+<div class="search-placeholder" style="display: none;">
+    
+</div>
 
 {% endblock content %}

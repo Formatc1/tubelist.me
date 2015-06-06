@@ -160,12 +160,17 @@ header{
     user-select: none;
 }
 
-.videos a, .videos a:link, .videos a:visited {
+.videos a, .videos a:link, .videos a:visited, #how-to a, #how-to a:link, #how-to a:visited, a.back, a:link.back, a:visited.back {
     color: #C23E4D;
 }
 
-.videos a:hover, .videos a:focus, .videos a:active {
+.videos a:hover, .videos a:focus, .videos a:active, #how-to a:hover, #how-to a:focus, #how-to a:active, a:hover.back, a:focus.back, a:active.back {
     color: #920E1D;
+}
+
+.back {
+    margin: 10px;
+    display: block;
 }
 
 .search-results li {
@@ -189,14 +194,6 @@ a:hover.navigation, a:focus.navigation, a:active.navigation {
 
 #how-to {
     margin: 0 3em;
-}
-
-#how-to a, #how-to a:link, #how-to a:visited {
-    color: #C23E4D;
-}
-
-#how-to a:hover, #how-to a:focus, #how-to a:active {
-    color: #920E1D;
 }
 
 .form.center {
