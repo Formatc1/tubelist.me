@@ -8,13 +8,12 @@ function objToString (obj) {
     return str;
 }
 
-
+var player;
 /*  Websocket.  */
 var ws = undefined;
 
 function ws_send(msg) {
     (typeof ws !== 'undefined') && ws.send(msg);
-
 }
 
 
@@ -48,12 +47,16 @@ function ws_initialize(id) {
                     else {
                         video.insertAfter('#videos-list ul li:eq('+data.index+')');
                     }
+                    reload_order();
                 break;
                 case "add":
-                    $('#videos-list ul').append('<li data-id="'+data.id+'" data-order="'+data.order+'">'+data.name+' <a href="/'+data.identifier+'/delete/'+data.id+'/">Delete</a></li>')
+                    $('#videos-list ul').append('<li data-id="'+data.id+'" data-order="'+data.order+'" data-identifier="'+data.identifier+'">'+data.name+' <a href="/'+data.playlist+'/delete/'+data.id+'/" class="delete-video">Delete</a></li>');
+                    add_video(data.identifier);
                 break;
                 case "delete":
+                    var identifier = $('#videos-list [data-id="'+data.id+'"]').attr('data-identifier');
                     $('#videos-list [data-id="'+data.id+'"]').remove();
+                    delete_video(identifier);
                 break;
                 case "change_name":
                     $('#playlist-title').text(data.name);
@@ -67,10 +70,15 @@ function ws_initialize(id) {
 
     }
     else {
-        alert("No WebSocket support in your browser. Cooperative edit unavailable.");
+        // alert("No WebSocket support in your browser. Cooperative edit unavailable.");
     }
 
 }
+
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 jQuery(document).ready(function($) {
     var id = $("#videos-list").attr('data-id');
@@ -89,10 +97,101 @@ jQuery(document).ready(function($) {
         }
     });
     $('#playlist-title').on("blur", function(){
-        url = $(this).attr('data-url');
+        var url = $(this).attr('data-url');
         $.ajax({
             url: '/'+ url +'/change-name/',
             data: {name: $(this).text()},
         });
     });
+    $('#videos-list').on('click', 'a.delete-video', function(event) {
+        event.preventDefault();
+        var url = $(this).attr('href');
+        var id = $(this).parent('li').attr('data-identifier');
+        // alert(id);
+        $.ajax({
+            url: url,
+        });
+        return false;
+    });
 });
+
+
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('ytplayer', {});
+
+}
+
+function delete_video(id) {
+    if (player) {
+        var state = player.getPlayerState();
+        var actualIds = player.getPlaylist();
+        alert(actualIds);
+        var actualIndex = 0;
+        var removedIndex = actualIds.indexOf(id);
+        actualIds.splice(removedIndex, 1);
+        var actualTime = 0;
+        if(state == 1 || state == 2 || state == 3) {
+            actualIndex = player.getPlaylistIndex();
+            actualTime = player.getCurrentTime();
+            if(removedIndex < actualIndex) {
+                actualIndex -= 1;
+            }
+            else if(removedIndex == actualIndex) {
+                actualTime = 0;
+            }
+            player.loadPlaylist(actualIds, actualIndex, actualTime);
+            if(state == 2) {
+                player.pauseVideo();
+            }
+        }
+        else {
+            player.cuePlaylist(actualIds, actualIndex, actualTime);
+        }
+    }
+}
+
+function add_video(id) {
+    if (player) {
+        var state = player.getPlayerState();
+        var actualIds = player.getPlaylist();
+        var actualIndex = 0;
+        actualIds.push(id);
+        var actualTime = 0;
+        if(state == 1 || state == 2 || state == 3) {
+            actualIndex = player.getPlaylistIndex();
+            actualTime = player.getCurrentTime();
+            player.loadPlaylist(actualIds, actualIndex, actualTime);
+            if(state == 2) {
+                player.pauseVideo();
+            }
+        }
+        else {
+            player.cuePlaylist(actualIds, actualIndex, actualTime);
+        }
+    }
+}
+
+function reload_order() {
+    if (player) {
+        var state = player.getPlayerState();
+        var actualIds = player.getPlaylist();
+        var actualIndex = 0;
+        var actualTime = 0;
+        var ids = [];
+        $('#videos-list .videos li').each(function(index) {
+            ids.push($(this).attr('data-identifier'));
+        });
+        if(state == 1 || state == 2 || state == 3) {
+            actualIndex = player.getPlaylistIndex();
+            actualIndex = ids.indexOf(actualIds[actualIndex]);
+            actualTime = player.getCurrentTime();
+            player.loadPlaylist(ids, actualIndex, actualTime);
+            if(state == 2) {
+                player.pauseVideo();
+            }
+        }
+        else {
+            player.cuePlaylist(ids, actualIndex, actualTime);
+        }
+    }
+}

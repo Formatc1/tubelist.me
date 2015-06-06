@@ -29,32 +29,11 @@
 <div data-id="{{ playlist.id }}" id="videos-list">
     <ul class="videos">
         {% for video in playlist.sorted_video_set.all %}
-            <li data-id="{{ video.pk }}" data-order="{{ video.order }}">{{ video.name }} <a href="{% url 'playlists:delete' playlist.url video.pk %}">Delete</a></li>
+            <li data-id="{{ video.pk }}" data-order="{{ video.order }}" data-identifier="{{ video.identifier }}">{{ video.name }} <a href="{% url 'playlists:delete' playlist.url video.pk %}" class="delete-video">Delete</a></li>
         {% endfor %}
     </ul>
 </div>
 
+<span id="test">Click</span>
+
 {% endblock content %}
-
-{% block footer_scripts %}
-    <script>
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-    var player;
-    function onYouTubeIframeAPIReady() {
-        player = new YT.Player('ytplayer', {
-            events: {
-                'onReady': onPlayerReady,
-            }
-        });
-    }
-
-    function onPlayerReady(event) {
-        // event.target.playVideo();
-    }
-
-    </script>
-{% endblock footer_scripts %}
