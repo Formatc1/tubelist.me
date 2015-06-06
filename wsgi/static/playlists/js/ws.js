@@ -94,6 +94,7 @@ jQuery(document).ready(function($) {
             var position = ui.item.index() - oldIndex;
             var data = {"task": "change_order", "id": id, "video_id": ui.item.attr("data-id"), "position": position, "index": ui.item.index()};
             ws_send(JSON.stringify(data));
+            reload_order();
         }
     });
 
