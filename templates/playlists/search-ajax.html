@@ -1,3 +1,4 @@
+{% if videos %}
 <a class="back" href="{% url 'playlists:playlist' playlist_id %}">Back to playlist</a>
 <h3>Search results for: {{ query }}</h3>
 <ul class="search-results videos">
@@ -10,4 +11,5 @@
 {% endif %}
 {% if next_page_token %}
     <a class="navigation" href="{% url 'playlists:search_ajax' playlist_id %}?q={{ query|urlencode }}&page={{ next_page_token }}">Next Page</a>
+{% endif %}
 {% endif %}

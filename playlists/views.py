@@ -1,5 +1,5 @@
 """Views module"""
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.validators import validate_email
@@ -15,6 +15,7 @@ from django.template.loader import get_template
 from django.template import Context
 from playlists.web_socket_handler import USERS
 import json
+import re
 # from apiclient.errors import HttpError
 
 
@@ -87,22 +88,45 @@ def search(request, playlist_id):
         return HttpResponseRedirect(reverse('playlists:playlist',
                                             args=(active_playlist.url,)))
     youtube = build("youtube", "v3", developerKey=YT_DEVELOPER_KEY)
-    search_response = youtube.search().list(q=query,
-                                            part="id, snippet",
-                                            type="video",
-                                            pageToken=page_token,
-                                            maxResults=10).execute()
-    videos = [video for video in search_response["items"]
-              if video["id"]["kind"] == "youtube#video"]
+
+    link_re = re.compile('.*(youtube\.com.*%3|youtu\.be\%2)(?P<id>.*)')
+    lookup_id = link_re.match(query)
     user_playlists_list = get_user_playlists(request)
-    return render(request, 'playlists/search.html', {
-        'query': query,
-        'videos': videos,
-        'prev_page_token': search_response.get("prevPageToken"),
-        'next_page_token': search_response.get("nextPageToken"),
-        'playlist_id': playlist_id,
-        'user_playlists': user_playlists_list
-    })
+    if lookup_id is not None:
+        video_id = lookup_id.group("id")
+        search_response = youtube.videos().list(id=video_id,
+                                                part='id, snippet').execute()
+        videos = [video for video in search_response["items"]]
+
+        request.GET = request.GET.copy()
+        request.GET['name'] = videos[0]["snippet"]["title"]
+
+        add(request, playlist_id, video["id"])
+
+        return render(request, 'playlists/search.html', {
+            'playlist_id': playlist_id,
+            'user_playlists': user_playlists_list
+        })
+        
+        
+    else:    
+        search_response = youtube.search().list(q=query,
+                                                part="id, snippet",
+                                                type="video",
+                                                pageToken=page_token,
+                                                maxResults=10).execute()
+    
+        videos = [video for video in search_response["items"]
+                  if video["id"]["kind"] == "youtube#video"]
+
+        return render(request, 'playlists/search.html', {
+            'query': query,
+            'videos': videos,
+            'prev_page_token': search_response.get("prevPageToken"),
+            'next_page_token': search_response.get("nextPageToken"),
+            'playlist_id': playlist_id,
+            'user_playlists': user_playlists_list
+        })
 
 
 def search_ajax(request, playlist_id):
@@ -110,20 +134,41 @@ def search_ajax(request, playlist_id):
     query = request.GET.get('q', '')
     page_token = request.GET.get('page', '')
     youtube = build("youtube", "v3", developerKey=YT_DEVELOPER_KEY)
-    search_response = youtube.search().list(q=query,
-                                            part="id, snippet",
-                                            type="video",
-                                            pageToken=page_token,
-                                            maxResults=10).execute()
-    videos = [video for video in search_response["items"]
-              if video["id"]["kind"] == "youtube#video"]
-    return render(request, 'playlists/search-ajax.html', {
-        'query': query,
-        'videos': videos,
-        'prev_page_token': search_response.get("prevPageToken"),
-        'next_page_token': search_response.get("nextPageToken"),
-        'playlist_id': playlist_id
-    })
+
+    link_re = re.compile('.*(youtube.com.*=|youtu\.be\/)(?P<id>.*)')
+    lookup_id = link_re.match(query)
+
+    if lookup_id is not None:
+        video_id = lookup_id.group("id")
+        search_response = youtube.videos().list(id=video_id,
+                                                part='id, snippet').execute()
+        videos = [video for video in search_response["items"]]
+
+        request.GET = request.GET.copy()
+        request.GET['name'] = videos[0]["snippet"]["title"]
+
+        add(request, playlist_id, video["id"])
+
+        return render(request, 'playlists/search-ajax.html', {
+            'playlist_id': playlist_id
+        })
+       
+    else:    
+        search_response = youtube.search().list(q=query,
+                                                part="id, snippet",
+                                                type="video",
+                                                pageToken=page_token,
+                                                maxResults=10).execute()
+        videos = [video for video in search_response["items"]
+                  if video["id"]["kind"] == "youtube#video"]
+
+        return render(request, 'playlists/search-ajax.html', {
+            'query': query,
+            'videos': videos,
+            'prev_page_token': search_response.get("prevPageToken"),
+            'next_page_token': search_response.get("nextPageToken"),
+            'playlist_id': playlist_id
+        })
 
 
 def add(request, playlist_id, video_id):
