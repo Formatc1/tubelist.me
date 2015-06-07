@@ -34,6 +34,7 @@ class Video(models.Model):
     identifier = models.SlugField(max_length=20)
     name = models.CharField(max_length=200)
     order = models.PositiveSmallIntegerField()
-
+    created = models.DateTimeField()
+    
     def __unicode__(self):
         return self.name

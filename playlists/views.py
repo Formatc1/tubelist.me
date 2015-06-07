@@ -16,6 +16,8 @@ from django.template import Context
 from playlists.web_socket_handler import USERS
 import json
 import re
+from datetime import timedelta
+from datetime import date
 # from apiclient.errors import HttpError
 
 
@@ -186,7 +188,8 @@ def add(request, playlist_id, video_id):
         new_video = Video(playlist=active_playlist,
                           identifier=video_id,
                           name=video_name,
-                          order=last_order)
+                          order=last_order,
+                          created=date.today())
         new_video.save()
         if str(active_playlist.id) in USERS:
             for user in USERS[str(active_playlist.id)]:
@@ -271,4 +274,44 @@ def recover(request):
 
 def how_to(request):
     """View for How To page"""
-    return render(request, 'playlists/how-to.html')
+    user_playlists_list = get_user_playlists(request)
+    return render(request, 'playlists/how-to.html', {
+         'user_playlists': user_playlists_list
+    })
+
+def statistics(request):
+    """View for statistics page"""
+    user_playlists_list = get_user_playlists(request)
+    videos = Video.objects.all()
+
+    videos_len = len(videos)
+    playlists_len = len(Playlist.objects.all())
+
+    videos = [video.created for video in videos]
+
+    dates_values = prepare_dates_for_js(videos)
+
+    return render(request, 'playlists/statistics.html', {
+        'videos_len' : videos_len,
+        'playlists_len' : playlists_len,
+        'dates' : dates_values[0][::-1],
+        'values' : dates_values[1][::-1],
+        'user_playlists': user_playlists_list
+    })
+
+def prepare_dates_for_js(dates_list):
+    """Prepare array for js chart"""
+    today = date.today()
+    dates = []
+    values = []
+    ret = []
+    for back_day in xrange(10):
+        back_date = today - timedelta(days=back_day)
+        back_dates_len = len([vdate for vdate in dates_list
+                              if vdate.month == back_date.month and vdate.day == back_date.day])
+        dates.append(back_date.isoformat())
+        values.append(back_dates_len)
+
+    ret.append(dates)
+    ret.append(values)
+    return ret
