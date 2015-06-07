@@ -70,6 +70,7 @@ header{
   z-index:10000000000000;
 }
 .cross{
+  display: none;
   background:none;
   position:absolute;
   top:8px;
@@ -92,7 +93,44 @@ header{
     right: 50px;
 }
 
-#playlist_nav{z-index:1000000; font-weight:bold; font-size:0.8em;  background:#735756; right: 0px;  position:absolute; top: 50px; text-align:center; }
+#edit_name_button{
+    display: inline-block;
+    position: relative;
+    background-color: #F59C36;
+    border-radius: 5px;
+    width: 70px;
+    height: 30px;
+    border: 1px solid #F59931;
+    bottom: 15px;
+}
+
+#edit_name_button p{
+    font-family: LatoRegular, sans-serif;
+    position: relative;
+    margin: 0;
+    padding: 7px;
+    padding-right: 2px;
+    padding-left: 0px;
+    font-size: 12px;
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#edit_name_button img{
+    position: relative;
+    margin: 0;
+    padding: 7px;
+    padding-right: 0px;
+    padding-left: 4px;
+    float:left;
+}
+
+#playlist_nav{z-index:1000000; font-weight:bold; font-size:0.8em;  background:#735756; right: 0px;  position:absolute; top: 50px; text-align:center; display: none }
 #playlist_nav ul {margin: 0; padding: 0; list-style-type: none; list-style-image: none;}
 #playlist_nav li {display: block;   padding:15px 10px 15px 10px; border-top:#42353C 1px solid;}
 #playlist_nav ul:last-child{
@@ -124,16 +162,20 @@ header{
 
 .logo-small {
     text-align: center;
-    margin: 10px;
+    margin: 30px;
+    height: 50px;
+    width: auto;
 }
 
 .logo-small h3 {
-    display: inline;
+    display: inline-block;
     position: relative;
     margin: 7px;
     bottom: 11px;
+    padding: 0;
     font-size: 1.6em;
 }
+
 
 .content {
     text-align: center;
