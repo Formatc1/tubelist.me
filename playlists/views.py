@@ -91,7 +91,7 @@ def search(request, playlist_id):
                                             args=(active_playlist.url,)))
     youtube = build("youtube", "v3", developerKey=YT_DEVELOPER_KEY)
     # regex to look for links
-    link_re = re.compile('.*(youtube\.com.*%3|youtu\.be\%2)(?P<id>.*)')
+    link_re = re.compile('(.*youtube\.com.*\?v=|.*youtu\.be\/)(?P<id>[a-zA-Z0-9_-]+)&?.*')
     lookup_id = link_re.match(query)
     user_playlists_list = get_user_playlists(request)
     if lookup_id is not None:
@@ -138,7 +138,7 @@ def search_ajax(request, playlist_id):
     page_token = request.GET.get('page', '')
     youtube = build("youtube", "v3", developerKey=YT_DEVELOPER_KEY)
     # regex to look for links
-    link_re = re.compile('.*(youtube.com.*=|youtu\.be\/)(?P<id>.*)')
+    link_re = re.compile('(.*youtube\.com.*\?v=|.*youtu\.be\/)(?P<id>[a-zA-Z0-9_-]+)&?.*')
     lookup_id = link_re.match(query)
 
     if lookup_id is not None:

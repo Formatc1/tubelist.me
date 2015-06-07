@@ -332,3 +332,7 @@ footer div {
 footer div.separator {
     border-left: 1px solid #000;
 }
+
+.number{
+    color: #C23E4D;
+}
