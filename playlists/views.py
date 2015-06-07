@@ -1,5 +1,5 @@
 """Views module"""
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.validators import validate_email
@@ -88,11 +88,12 @@ def search(request, playlist_id):
         return HttpResponseRedirect(reverse('playlists:playlist',
                                             args=(active_playlist.url,)))
     youtube = build("youtube", "v3", developerKey=YT_DEVELOPER_KEY)
-
+    # regex to look for links
     link_re = re.compile('.*(youtube\.com.*%3|youtu\.be\%2)(?P<id>.*)')
     lookup_id = link_re.match(query)
     user_playlists_list = get_user_playlists(request)
     if lookup_id is not None:
+        # link found
         video_id = lookup_id.group("id")
         search_response = youtube.videos().list(id=video_id,
                                                 part='id, snippet').execute()
@@ -101,21 +102,21 @@ def search(request, playlist_id):
         request.GET = request.GET.copy()
         request.GET['name'] = videos[0]["snippet"]["title"]
 
-        add(request, playlist_id, video["id"])
+        add(request, playlist_id, video_id)
 
         return render(request, 'playlists/search.html', {
             'playlist_id': playlist_id,
             'user_playlists': user_playlists_list
         })
-        
-        
-    else:    
+
+    else:
+        # not found
         search_response = youtube.search().list(q=query,
                                                 part="id, snippet",
                                                 type="video",
                                                 pageToken=page_token,
                                                 maxResults=10).execute()
-    
+
         videos = [video for video in search_response["items"]
                   if video["id"]["kind"] == "youtube#video"]
 
@@ -134,11 +135,12 @@ def search_ajax(request, playlist_id):
     query = request.GET.get('q', '')
     page_token = request.GET.get('page', '')
     youtube = build("youtube", "v3", developerKey=YT_DEVELOPER_KEY)
-
+    # regex to look for links
     link_re = re.compile('.*(youtube.com.*=|youtu\.be\/)(?P<id>.*)')
     lookup_id = link_re.match(query)
 
     if lookup_id is not None:
+        # link found
         video_id = lookup_id.group("id")
         search_response = youtube.videos().list(id=video_id,
                                                 part='id, snippet').execute()
@@ -147,13 +149,14 @@ def search_ajax(request, playlist_id):
         request.GET = request.GET.copy()
         request.GET['name'] = videos[0]["snippet"]["title"]
 
-        add(request, playlist_id, video["id"])
+        add(request, playlist_id, video_id)
 
         return render(request, 'playlists/search-ajax.html', {
             'playlist_id': playlist_id
         })
-       
-    else:    
+
+    else:
+        # not found
         search_response = youtube.search().list(q=query,
                                                 part="id, snippet",
                                                 type="video",
@@ -198,7 +201,7 @@ def add(request, playlist_id, video_id):
                                         args=(active_playlist.url,)))
 
 
-def delete(request, playlist_id, video_id):
+def delete(_, playlist_id, video_id):
     """delete video from playlist view"""
     active_playlist = get_object_or_404(Playlist, url=playlist_id)
     try:
