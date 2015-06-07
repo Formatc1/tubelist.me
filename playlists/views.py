@@ -189,7 +189,7 @@ def add(request, playlist_id, video_id):
                           identifier=video_id,
                           name=video_name,
                           order=last_order,
-                          created=date.today())
+                          created=datetime.today())
         new_video.save()
         if str(active_playlist.id) in USERS:
             for user in USERS[str(active_playlist.id)]:
