@@ -8,7 +8,7 @@ function objToString (obj) {
     return str;
 }
 
-var player;
+var player = undefined;
 /*  Websocket.  */
 var ws = undefined;
 
@@ -138,27 +138,27 @@ jQuery(document).ready(function($) {
         event.preventDefault();
         var url = $(this).attr('action');
         var query = $(this).children('input.query').val();
+        $(this).children('input.query').val('');
+        var re = /.*youtube\.com.*|.*youtu\.be.*/;
         $.ajax({
             url: url+'ajax/',
             data: {q: query}
         })
         .done(function(html) {
-            if(html != ""){
+            if(!re.test(query)) {
                 $('#videos-list').hide();
-            }
-            $('.search-placeholder').html(html).show();
+                $('.search-placeholder').html(html).show();
+            }    
         })        
     });
 
     $('.search-placeholder').on('click', 'a.add', function(event) {
         event.preventDefault();
         $('.search-placeholder').hide();
+        $('#videos-list').show();
         var url = $(this).attr('href');
         $.ajax({
             url: url
-        })
-        .done(function() {
-            $('#videos-list').show();
         })
     });
 
@@ -184,11 +184,14 @@ jQuery(document).ready(function($) {
 
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('ytplayer', {});
-
 }
 
 function delete_video(id) {
-    if (player) {
+    if ($('#videos-list .videos li').size() == 0) {
+        $('#player-placeholder').hide().html('');
+    }
+    else {
+    // if (player) {
         var state = player.getPlayerState();
         var actualIds = player.getPlaylist();
         var actualIndex = 0;
@@ -216,11 +219,28 @@ function delete_video(id) {
 }
 
 function add_video(id) {
-    if (player) {
+    if ($('#videos-list .videos li').size() == 1) {
+        player = new YT.Player('player-placeholder', {
+            height: '390',
+            width: '640',
+            videoId: id
+        });
+        $('#player-placeholder').show();
+    }
+    else {
+    // if (player) {
         var state = player.getPlayerState();
         var actualIds = player.getPlaylist();
+        if (!actualIds) {
+            actualIds = [];
+            $('#videos-list .videos li').each(function(index) {
+                actualIds.push($(this).attr('data-identifier'));
+            });
+        }
+        else {
+            actualIds.push(id);
+        }
         var actualIndex = 0;
-        actualIds.push(id);
         var actualTime = 0;
         if(state == 1 || state == 2 || state == 3) {
             actualIndex = player.getPlaylistIndex();

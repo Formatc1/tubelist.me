@@ -90,26 +90,23 @@ def search(request, playlist_id):
                                             args=(active_playlist.url,)))
     youtube = build("youtube", "v3", developerKey=YT_DEVELOPER_KEY)
     # regex to look for links
-    link_re = re.compile('(.*youtube\.com.*\?v=|.*youtu\.be\/)(?P<id>[a-zA-Z0-9_-]+)&?.*')
+    link_re = re.compile('(.*youtube\.com.*\?v=|.*youtu\.be\/)\
+(?P<id>[a-zA-Z0-9_-]+)&?.*')
     lookup_id = link_re.match(query)
     user_playlists_list = get_user_playlists(request)
-    if lookup_id is not None:
+    if lookup_id:
         # link found
         video_id = lookup_id.group("id")
         search_response = youtube.videos().list(id=video_id,
                                                 part='id, snippet').execute()
         videos = [video for video in search_response["items"]]
-
         request.GET = request.GET.copy()
         request.GET['name'] = videos[0]["snippet"]["title"]
-
-        add(request, playlist_id, video_id)
-
-        return render(request, 'playlists/search.html', {
-            'playlist_id': playlist_id,
-            'user_playlists': user_playlists_list
-        })
-
+        return add(request, playlist_id, video_id)
+        # return render(request, 'playlists/search.html', {
+        #     'playlist_id': playlist_id,
+        #     'user_playlists': user_playlists_list
+        # })
     else:
         # not found
         search_response = youtube.search().list(q=query,
@@ -117,10 +114,8 @@ def search(request, playlist_id):
                                                 type="video",
                                                 pageToken=page_token,
                                                 maxResults=10).execute()
-
         videos = [video for video in search_response["items"]
                   if video["id"]["kind"] == "youtube#video"]
-
         return render(request, 'playlists/search.html', {
             'query': query,
             'videos': videos,
@@ -137,24 +132,21 @@ def search_ajax(request, playlist_id):
     page_token = request.GET.get('page', '')
     youtube = build("youtube", "v3", developerKey=YT_DEVELOPER_KEY)
     # regex to look for links
-    link_re = re.compile('(.*youtube\.com.*\?v=|.*youtu\.be\/)(?P<id>[a-zA-Z0-9_-]+)&?.*')
+    link_re = re.compile('(.*youtube\.com.*\?v=|.*youtu\.be\/)\
+(?P<id>[a-zA-Z0-9_-]+)&?.*')
     lookup_id = link_re.match(query)
-
     if lookup_id is not None:
         # link found
         video_id = lookup_id.group("id")
         search_response = youtube.videos().list(id=video_id,
                                                 part='id, snippet').execute()
         videos = [video for video in search_response["items"]]
-
         request.GET = request.GET.copy()
         request.GET['name'] = videos[0]["snippet"]["title"]
-
-        add(request, playlist_id, video_id)
-
-        return render(request, 'playlists/search-ajax.html', {
-            'playlist_id': playlist_id
-        })
+        return add(request, playlist_id, video_id)
+        # return render(request, 'playlists/search-ajax.html', {
+        #     'playlist_id': playlist_id
+        # })
 
     else:
         # not found
@@ -165,7 +157,6 @@ def search_ajax(request, playlist_id):
                                                 maxResults=10).execute()
         videos = [video for video in search_response["items"]
                   if video["id"]["kind"] == "youtube#video"]
-
         return render(request, 'playlists/search-ajax.html', {
             'query': query,
             'videos': videos,
@@ -278,25 +269,23 @@ def how_to(request):
          'user_playlists': user_playlists_list
     })
 
+
 def statistics(request):
     """View for statistics page"""
     user_playlists_list = get_user_playlists(request)
     videos = Video.objects.all()
-
     videos_len = len(videos)
     playlists_len = len(Playlist.objects.all())
-
     videos = [video.created for video in videos]
-
     dates_values = prepare_dates_for_js(videos)
-
     return render(request, 'playlists/statistics.html', {
-        'videos_len' : videos_len,
-        'playlists_len' : playlists_len,
-        'dates' : dates_values[0][::-1],
-        'values' : dates_values[1][::-1],
+        'videos_len': videos_len,
+        'playlists_len': playlists_len,
+        'dates': dates_values[0][::-1],
+        'values': dates_values[1][::-1],
         'user_playlists': user_playlists_list
     })
+
 
 def prepare_dates_for_js(dates_list):
     """Prepare array for js chart"""
@@ -307,7 +296,8 @@ def prepare_dates_for_js(dates_list):
     for back_day in xrange(10):
         back_date = today - timedelta(days=back_day)
         back_dates_len = len([vdate for vdate in dates_list
-                              if vdate.month == back_date.month and vdate.day == back_date.day])
+                              if vdate.month == back_date.month
+                              and vdate.day == back_date.day])
         dates.append(back_date.isoformat())
         values.append(back_dates_len)
 
