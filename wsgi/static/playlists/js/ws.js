@@ -79,8 +79,8 @@ var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
 jQuery(document).ready(function($) {
+
     var id = $("#videos-list").attr('data-id');
     ws_initialize(id);
     var oldIndex = 0;
@@ -117,6 +117,7 @@ jQuery(document).ready(function($) {
     });
 
     $('#search').on('submit', function(event) {
+
         event.preventDefault();
         var url = $(this).attr('action');
         var query = $(this).children('input.query').val();
@@ -125,7 +126,9 @@ jQuery(document).ready(function($) {
             data: {q: query}
         })
         .done(function(html) {
-            $('#videos-list').hide();
+            if(html != ""){
+                $('#videos-list').hide();
+            }
             $('.search-placeholder').html(html).show();
         })        
     });
