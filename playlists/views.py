@@ -16,8 +16,7 @@ from django.template import Context
 from playlists.web_socket_handler import USERS
 import json
 import re
-from datetime import timedelta
-from datetime import date
+from datetime import timedelta, date
 # from apiclient.errors import HttpError
 
 
@@ -189,7 +188,7 @@ def add(request, playlist_id, video_id):
                           identifier=video_id,
                           name=video_name,
                           order=last_order,
-                          created=date.today())
+                          created=datetime.today())
         new_video.save()
         if str(active_playlist.id) in USERS:
             for user in USERS[str(active_playlist.id)]:
