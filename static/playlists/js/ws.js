@@ -81,6 +81,18 @@ var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 jQuery(document).ready(function($) {
 
+    //EDIT PLAYLIST BUTTON
+
+    $('#edit_name_button').on('click', function(event) {
+        var title = $('#playlist-title');
+        if(!title.is(":focus")){
+            title.focus();      
+        }
+        
+    });
+
+    // END
+
     var id = $("#videos-list").attr('data-id');
     ws_initialize(id);
     var oldIndex = 0;
@@ -98,7 +110,12 @@ jQuery(document).ready(function($) {
         }
     });
 
+    $('#playlist-title').on("focus", function(){
+        $(this).css('background-color', '#fff');
+    });
+
     $('#playlist-title').on("blur", function(){
+        $(this).css('background-color', 'transparent');
         var url = $(this).attr('data-url');
         $.ajax({
             url: '/'+ url +'/change-name/',
